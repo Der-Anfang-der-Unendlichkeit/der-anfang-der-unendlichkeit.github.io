@@ -1,0 +1,334 @@
+/* Both fonts are self-hosted under the SIL Open Font License, see the OFL-*.txt files in fonts/ */
+@font-face {
+  font-family: 'Pathway Gothic One';
+  src: url('/fonts/PathwayGothicOne-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: eb-garamond;
+  src: url('/fonts/EBGaramond-Variable.ttf') format('truetype');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: eb-garamond;
+  src: url('/fonts/EBGaramond-Italic-Variable.ttf') format('truetype');
+  font-weight: 400 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+* {
+  font-family: eb-garamond, Georgia, serif !important;
+}
+
+body {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  font-size: 1.2rem;
+  background-color: floralwhite;
+}
+
+/*
+ * The second-most dominant blue in the banner image
+ * according to https://dominant-colors.com/
+ */
+a {
+  color: #4488c3;
+}
+
+.bg-dominant {
+  background-color: #4488c3;
+  color: #fff !important;
+}
+
+.card {
+  background-color: floralwhite;
+}
+
+.gothic-font, .gothic-font * {
+  font-family: 'Pathway Gothic One', sans-serif !important;
+}
+
+ul.nav * {
+  font-size: 1.3rem !important;
+}
+
+figure *:not(h3) {
+  font-size: 1.2rem !important;
+}
+
+figure h3 {
+  font-size: 1.4rem;
+}
+
+#banner {
+  width: 300px;
+  height: 300px;
+  background-size: cover;
+  border-radius: 100%;
+  margin: 0 auto;
+  position: relative;
+  background-image:  url('/images/banner-lg-min-xxs.webp');
+}
+
+/*
+ * Glowing effect around banner inspired by
+ * https://lenadesign.org/2021/03/05/css-glowing-gradient-border/
+ */
+#banner:before {
+  z-index:-1;
+  position: absolute;
+  content:"";
+  top: -10px;
+  left: -15px;
+  /*width: 710px;
+  height: 710px;*/
+  width: 330px;
+  height: 330px;
+  border-radius: 100%;
+  /*background-image: linear-gradient(0deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);*/
+  background-image: linear-gradient(45deg, #4158D0 0%, #FFCC70 46%, #C850C0 100%);
+  filter: blur(20px);
+
+}
+
+blockquote {
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+/* This is how Stack Overflow does rounded corners
+   for the left border, along with the relative
+   positioning of the blockquote proper. */
+blockquote:before {
+  background: #cd5c5c;
+  border-radius: 8px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  content: "";
+  position: absolute;
+  width: 3px;
+}
+
+blockquote > *:last-child {
+  margin-bottom: 0.5rem;
+}
+
+.diagram img {
+  max-width: 100%;
+  width: 700px;
+}
+
+/* Custom nav-pill look for active nav pills */
+.nav-link.active {
+  background: none !important;
+  text-decoration: underline;
+  color: initial !important;
+}
+
+#logo {
+  background-image: url('/images/logo.webp');
+  height: 50px;
+  width: 50px;
+  background-size: cover;
+  border-radius: 100%;
+  margin-top: -0.3rem;
+}
+
+.linkable {
+  color: #212529;
+  scroll-margin-top: 2rem;
+  display: inline-flex;
+}
+
+.heading {
+  scroll-margin-top: 1.5rem;
+}
+
+.linkable:hover {
+  color: inherit;
+  text-decoration-color: #212529;
+}
+
+.glossary-link {
+  color: #212529;
+  scroll-margin-top: 8.4rem;
+  scroll-snap-margin-top: 8.4rem;
+}
+
+.glossary-link:hover {
+  color: inherit;
+  text-decoration-color: #212529;
+}
+
+.annotation {
+  font-style: italic;
+}
+
+.cross-reference {
+  font-style: italic;
+}
+
+dd p {
+  margin-bottom: 0;
+}
+
+#global-heading-link:hover {
+  text-decoration: none !important;
+}
+
+.video-dimensions {
+  max-width: 100%;
+  width: 345px;
+  height: 194px;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  #banner {
+    width: 500px;
+    height: 500px;
+    background-image: url('/images/banner-lg-min.webp');
+  }
+
+  #banner:before {
+    width: 530px;
+    height: 530px;
+  }
+
+  .video-dimensions {
+    width: 550px;
+    height: 309px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  body {
+    font-size: 1.5rem;
+  }
+
+  ul.nav * {
+    font-size: 1.5rem !important;
+  }
+
+  figure *:not(h3) {
+    font-size: 1.5rem !important;
+  }
+
+  figure h3 {
+    font-size: 1.75rem !important;
+  }
+
+  #banner {
+    width: 550px;
+    height: 550px;
+  }
+
+  #banner:before {
+    width: 580px;
+    height: 580px;
+  }
+
+  .text-md-nowrap {
+    white-space: nowrap !important;
+  }
+
+  .heading {
+    scroll-margin-top: 1.9rem;
+  }
+
+  #links-plus-3d-cover {
+    flex-direction: row-reverse;
+  }
+
+  .video-dimensions {
+    width: 700px;
+    height: 394px;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  #banner {
+    width: 600px;
+    height: 600px;
+  }
+
+  #banner:before {
+    width: 630px;
+    height: 630px;
+  }
+
+  .video-dimensions {
+    width: 900px;
+    height: 506px;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  #banner {
+    width: 655px;
+    height: 655px;
+  }
+
+  #banner:before {
+    width: 685px;
+    height: 685px;
+  }
+}
+
+.blockquote-footer {
+  font-size: 100%;
+}
+
+ul:not(.nav):not(.list-unstyled) li::marker {
+  content: '–   ';
+}
+
+.glossary-row {
+  padding-top: 0.4rem;
+}
+
+.highlight {
+  animation: fadeInOut 3s linear;
+}
+
+@keyframes fadeInOut {
+  0%,100% { background: initial; }
+  50% { background: rgb(255, 243, 161); }
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.book-cover-image {
+  max-width: 100%;
+  max-height: 320px;
+}
+
+.small-caps {
+  font-variant: small-caps;
+}
+
+ins {
+  background-color: #c5e1a5;
+  font-family: inherit;
+  border-radius: 5px;
+  padding: 0 2px;
+}
+
+del {
+  background-color: #ef9a9a;
+  font-family: inherit;
+  border-radius: 5px;
+  padding: 0 2px;
+}

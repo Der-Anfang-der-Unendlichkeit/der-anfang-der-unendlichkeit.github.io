@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Interview · Der Anfang der Unendlichkeit</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="author" content="Dennis Hackethal">
+    <link rel="canonical" href="https://deranfangderunendlichkeit.de/interview">
+
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="64x64">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://deranfangderunendlichkeit.de/interview">
+    <meta property="og:site_name" content="Der Anfang der Unendlichkeit">
+    <meta property="og:image" itemprop="image primaryImageOfPage" content="https://deranfangderunendlichkeit.de/images/banner-lg-min-xxs.webp">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="deranfangderunendlichkeit.de">
+    <meta name="twitter:title" property="og:title" itemprop="name" content="Interview · Der Anfang der Unendlichkeit">
+    <meta name="twitter:description" property="og:description" itemprop="description" content="Willkommen auf der offiziellen Homepage zum Buch Der Anfang der Unendlichkeit des Physikers David Deutsch.">
+
+    <link rel="stylesheet" href="/bootstrap-4.6.0.min.css">
+    <link rel="stylesheet" href="/application.css">
+
+    <script async defer data-domain="deranfangderunendlichkeit.de" src="https://plausible.io/js/plausible.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div>
+        <a id="global-heading-link" href="/">
+          <h2 class="text-center mt-3 text-dark gothic-font">
+            Der Anfang der Unendlichkeit
+            <br>
+            <small class="text-muted">Erklärungen, die die Welt verwandeln</small>
+          </h2>
+        </a>
+      </div>
+
+      <div class="my-3 my-md-4">
+        <ul class="nav nav-pills justify-content-center text-large gothic-font">
+          <li class="nav-item d-none d-md-block"><a class="nav-link" href="/"><div id="logo"></div></a></li>
+          <li class="nav-item"><a class="nav-link" href="/ausschnitt#ausschnitt">Ausschnitt</a></li>
+          <li class="nav-item"><a class="nav-link" href="/glossar#glossar">Glossar</a></li>
+          <li class="nav-item"><a class="nav-link" href="/zitate#zitate">Zitate</a></li>
+          <li class="nav-item"><a class="nav-link" href="/pressestimmen#pressestimmen">Pressestimmen</a></li>
+          <li class="nav-item"><a class="nav-link" href="/leserstimmen#leserstimmen">Leserstimmen</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/interview#interview">Interview</a></li>
+          <li class="nav-item"><a class="nav-link" href="/kontakt#kontakt">Kontakt</a></li>
+          <li class="nav-item"><a class="nav-link" href="/mehr#mehr">Mehr</a></li>
+          <li class="nav-item"><a class="nav-link font-weight-bold text-underline" href="/kaufen#kaufen">Kaufen</a></li>
+        </ul>
+      </div>
+
+<div>
+  <h1 id="interview" class="heading text-center mb-4 mb-md-5">Interview</h1>
+
+  <div class="text-center">
+    <p class="mb-4 mb-md-5">Autor David Deutsch und Übersetzer Dennis Hackethal sprechen über das Buch.</p>
+
+    <div class="mb-4 mb-md-5">
+      <h2 class="mb-3">Interview #1 (auf Deutsch)</h2>
+
+      <iframe id="interview-1" class="d-none rounded video-dimensions" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <div id="interview-1-placeholder" class="d-flex flex-column align-items-center">
+        <div class="d-flex flex-column align-items-center justify-content-center video-dimensions rounded" style="background-image: url(/images/interview-1-thumbnail.webp); background-size: cover;">
+          <button class="btn btn-lg bg-dominant" onclick="loadVideo('interview-1', 'https://www.youtube-nocookie.com/embed/UHm88w_BnMU?autoplay=1')">YouTube-Video laden</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="mb-3">Interview #2 (auf Englisch)</h2>
+
+      <iframe id="interview-2" class="d-none rounded video-dimensions" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+      <div id="interview-2-placeholder" class="d-flex flex-column align-items-center">
+        <div class="d-flex flex-column align-items-center justify-content-center video-dimensions rounded" style="background-image: url(/images/interview-2-thumbnail.webp); background-size: cover;">
+          <button class="btn btn-lg bg-dominant" onclick="loadVideo('interview-2', 'https://www.youtube-nocookie.com/embed/zoem4rRDms0?autoplay=1')">YouTube-Video laden</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center my-5">
+      <div class="mb-3"><h3>Haben wir Ihr Interesse geweckt?</h3></div>
+      <a class="btn btn-lg bg-dominant" href="/kaufen#kaufen">Jetzt kaufen</a>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  window.loadVideo = (id, src) => {
+    document.getElementById(`${id}-placeholder`).remove();
+
+    let iframe = document.getElementById(id);
+    iframe.classList.remove('d-none');
+    iframe.src = src;
+  };
+</script>
+
+      <hr class="mt-5">
+
+      <footer class="mb-4 text-center">
+        <small>
+          <span class="gothic-font">
+            <a href="/">Startseite</a>
+            &middot; <a class="font-weight-bold" href="/kaufen">Buch kaufen</a>
+            &middot; <a href="/datenschutzerklaerung">Datenschutzerklärung</a>
+            &middot; <a href="/errata">Errata</a>
+          </span>
+        </small>
+      </footer>
+    </div>
+  </body>
+</html>
