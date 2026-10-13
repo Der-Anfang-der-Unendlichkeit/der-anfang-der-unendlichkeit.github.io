@@ -7,7 +7,7 @@
 
 @font-face {
   font-family: eb-garamond;
-  src: url('/fonts/EBGaramond-Variable.ttf') format('truetype');
+  src: url('/fonts/EBGaramond-Variable.woff2') format('woff2');
   font-weight: 400 800;
   font-style: normal;
   font-display: swap;
@@ -15,7 +15,7 @@
 
 @font-face {
   font-family: eb-garamond;
-  src: url('/fonts/EBGaramond-Italic-Variable.ttf') format('truetype');
+  src: url('/fonts/EBGaramond-Italic-Variable.woff2') format('woff2');
   font-weight: 400 800;
   font-style: italic;
   font-display: swap;
@@ -73,7 +73,7 @@ figure h3 {
   border-radius: 100%;
   margin: 0 auto;
   position: relative;
-  background-image:  url('/images/banner-lg-min-xxs.webp');
+  background-image: url('/images/banner-600.webp');
 }
 
 /*
@@ -308,6 +308,11 @@ ul:not(.nav):not(.list-unstyled) li::marker {
 
 .nav a:hover {
   text-decoration: underline;
+}
+
+/* Lets images with width and height attributes scale without distortion */
+img {
+  height: auto;
 }
 
 .book-cover-image {

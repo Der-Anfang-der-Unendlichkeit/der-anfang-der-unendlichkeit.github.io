@@ -28,9 +28,16 @@ does, so add `.html` when previewing locally.
   of them has to be made in every top-level `.html` file, including `404.html`.
 - Each page's `<h1>` has an `id` matching its URL, and nav links point to it
   (`/glossar#glossar`). The active nav item gets the `active` class.
-- Each page sets its own `<title>` ("… · Der Anfang der Unendlichkeit"), the
-  matching `twitter:title`/`og:title`, `og:url` and a canonical link. New pages
-  need all of these and an entry in `sitemap.xml`.
+- Each page sets its own `<title>` ("… · Der Anfang der Unendlichkeit"; the
+  homepage's is "Der Anfang der Unendlichkeit von David Deutsch"), the
+  matching `twitter:title`/`og:title`, `og:url`, a canonical link and a meta
+  description (about 120–160 characters) that `twitter:description`/
+  `og:description` repeat. New pages need all of these and an entry in
+  `sitemap.xml`.
+- Each page has exactly one `<h1>`. Where something else needs to look like a
+  heading of another level, use Bootstrap's classes (`<h2 class="h1">`).
+- The homepage carries the site's structured data (JSON-LD `WebSite` and
+  `Book`). Keep it in sync when book details or retailers change.
 - `pages/`, `xmas.html` and `rezensionen.html` are meta-refresh redirects from
   URLs the old site used. Keep them so old links and search results keep
   working.
@@ -46,6 +53,14 @@ does, so add `.html` when previewing locally.
   SIL Open Font License, so the site loads nothing from font services. Keep it
   that way: any new third-party request needs a section in the privacy policy
   (`datenschutzerklaerung.html`).
+- The site loads EB Garamond as WOFF2 files subset to Latin, Greek and common
+  punctuation, made from the TTFs next to them (which `bin/og-images.sh` uses)
+  with fonttools:
+  `pyftsubset EBGaramond-Variable.ttf --unicodes='U+0000-036F,U+0370-03FF,U+1E00-1EFF,U+2000-206F,U+2070-209F,U+20A0-20CF,U+2100-214F,U+2190-21FF,U+2200-22FF,U+25CA,U+FB00-FB06' --layout-features='*' --flavor=woff2 --output-file=EBGaramond-Variable.woff2`
+  (likewise for the italic). Redo this if a page needs a character outside
+  those ranges.
+- The homepage banner comes in two sizes: `banner-600.webp` for phones and
+  `banner-lg-min.webp` above 576px. The homepage preloads both by media query.
 - Files must stay under GitHub's 100 MB limit. Unused originals (such as the
   full-quality Socrates audio) live outside the repo in
   `../assets/`.
