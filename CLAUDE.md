@@ -46,6 +46,15 @@ does, so add `.html` when previewing locally.
   `mittelmassigkeitsprinzip`), so existing `#…` links keep working.
 - Errata are listed in page order.
 
+## Preview images
+
+Each page has its own link preview image (`og:image`) in `images/og/`,
+rendered by `bin/og-images.sh` (ImageMagick) from the heading and subtitle
+listed at the bottom of that script. When a page's heading or content changes
+enough that its image or subtitle no longer fits, update the list and rerun
+the script. New pages need an entry there, too. Images keep the bottom-left
+corner free, where X overlays the domain.
+
 ## Assets
 
 - Bootstrap 4.6 CSS is vendored; no JavaScript library is loaded.
