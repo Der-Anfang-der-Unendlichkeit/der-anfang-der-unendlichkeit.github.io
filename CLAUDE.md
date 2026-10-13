@@ -79,3 +79,8 @@ corner free, where X overlays the domain.
 Pushing to `main` publishes the site through GitHub Pages. `CNAME` sets the
 custom domain. The other domains (anfa.ng, anfangderunendlichkeit.de) are
 forwarded at their registrars, not here.
+
+`6520b8fde17765146bba6267c605b63c.txt` at the root is the IndexNow key that
+proves to Bing (and other IndexNow engines) that pings for this site come from
+its owner. Keep it. To ask them to recrawl pages after a deploy, POST the URLs
+to `https://api.indexnow.org/indexnow` with that key.
