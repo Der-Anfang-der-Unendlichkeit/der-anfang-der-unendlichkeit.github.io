@@ -66,6 +66,9 @@ The markup and CSS use the drawing's 2400×1080 coordinates (star positions,
 the shoulder the arm turns about, the hover rotations), so if the drawing's
 geometry changes, update them together. Phones get an image cropped to the
 part they show; keep the images small, since they load on every page.
+`overscroll.js` keeps the page from bouncing past the footer (which would
+reveal the plain background below the drawing) while still letting it bounce
+at the top.
 
 ## Assets
 
