@@ -48,13 +48,8 @@ def main(out):
                 L = ln * r * rnd.uniform(.8, 1.2)
                 f.write(f'stroke-width {w:.2f}\nstroke-opacity .8\nline {x - math.cos(a) * L:.1f},{y - math.sin(a) * L:.1f} '
                         f'{x + math.cos(a) * L:.1f},{y + math.sin(a) * L:.1f}\n')
-        # the bright star on the ring's upper left, as on the cover
-        bx, by = RING[0] + RING[2] * math.cos(math.radians(222)), RING[1] + RING[2] * math.sin(math.radians(222))
-        for ang, L, w in ((0, 60, 1.6), (90, 60, 1.6), (45, 22, 1), (135, 22, 1), (20, 30, .7), (110, 30, .7)):
-            a = math.radians(ang)
-            f.write(f'stroke-width {w}\nstroke-opacity .95\nline {bx - math.cos(a) * L:.1f},{by - math.sin(a) * L:.1f} '
-                    f'{bx + math.cos(a) * L:.1f},{by + math.sin(a) * L:.1f}\n')
-        f.write(f'fill white\nstroke none\ncircle {bx:.1f},{by:.1f} {bx + 5:.1f},{by:.1f}\n')
+        # The bright star on the ring's upper left, as on the cover, is not drawn
+        # here: the footer's SVG draws it at 427,312.5 so it can twinkle.
     # the ring: a firm pass and a fainter one beside it, both wobbling a little
     wob = Noise(5, 160)
     cx, cy, r = RING

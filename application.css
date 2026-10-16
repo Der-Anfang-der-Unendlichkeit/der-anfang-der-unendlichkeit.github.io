@@ -450,9 +450,46 @@ del {
 .site-footer a.l4:is(:hover, :focus-visible) ~ .arm { transform: rotate(-57.5deg); }
 .site-footer a.l4:is(:hover, :focus-visible) ~ .s4 { opacity: .85; }
 
+/*
+ * The bright star on the ring flares now and then. Three nested groups flare on
+ * cycles of different lengths, so the flares come at irregular intervals and
+ * occasionally stack into a bigger one.
+ */
+.site-footer .twinkle, .site-footer .twinkle g {
+  stroke: #fff;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: footer-twinkle 7.3s ease-in-out 1.2s infinite;
+}
+
+.site-footer .twinkle > g {
+  animation-duration: 11.9s;
+  animation-delay: 4.6s;
+}
+
+.site-footer .twinkle > g > g {
+  animation-duration: 17.3s;
+  animation-delay: 9.1s;
+}
+
+@keyframes footer-twinkle {
+  0%, 9%, 100% {
+    transform: none;
+  }
+
+  3% {
+    transform: scale(1.5) rotate(10deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-footer .arm, .site-footer .sight, .site-footer .star {
     transition: none;
+  }
+
+  .site-footer .twinkle, .site-footer .twinkle g {
+    animation: none;
   }
 }
 
