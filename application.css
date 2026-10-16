@@ -398,7 +398,11 @@ del {
   letter-spacing: .5px;
 }
 
-.site-footer text.buy {
+/*
+ * The link he points at looks selected: bold, with a bigger star. At rest
+ * that's Buch kaufen; hovering or focusing another link moves the selection.
+ */
+.site-footer a.l2 text, .site-footer a:is(:hover, :focus-visible) text {
   font-weight: bold;
 }
 
@@ -411,15 +415,23 @@ del {
   text-decoration: underline;
 }
 
-.site-footer a:is(:hover, :focus-visible) .star {
+.site-footer a.l2 .star, .site-footer a:is(:hover, :focus-visible) .star {
   transform: scale(1.35);
 }
 
-/* At rest he points at the first star */
+.site-footer .constellation:has(a:is(:hover, :focus-visible)) a.l2:not(:hover, :focus-visible) text {
+  font-weight: normal;
+}
+
+.site-footer .constellation:has(a:is(:hover, :focus-visible)) a.l2:not(:hover, :focus-visible) .star {
+  transform: none;
+}
+
+/* At rest he points at Buch kaufen */
 .site-footer .arm {
   transform-box: view-box;
   transform-origin: 1927px 556px;
-  transform: rotate(-10.7deg);
+  transform: rotate(-27.0deg);
   transition: transform .7s cubic-bezier(.3, .8, .3, 1);
 }
 
@@ -433,11 +445,11 @@ del {
   transition: opacity .35s;
 }
 
-.site-footer .sight.s1 {
+.site-footer .sight.s2 {
   opacity: .8;
 }
 
-.site-footer a:is(:hover, :focus-visible) ~ .sight.s1 {
+.site-footer a:is(:hover, :focus-visible) ~ .sight.s2 {
   opacity: 0;
 }
 
