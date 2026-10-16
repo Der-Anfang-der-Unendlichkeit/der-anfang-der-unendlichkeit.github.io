@@ -33,6 +33,8 @@ def main(out):
         n += 1
         m = rnd.random() ** 3.2
         r = .55 + 2.2 * m
+        if math.hypot(x - RING[0], y - RING[1]) < RING[2] + 4:
+            continue  # the planet hides the stars behind it
         dots.append((x, y, r, .45 + .55 * min(1, m * 3)))
         if m > .86:
             glints.append((x, y, r))
