@@ -1,5 +1,5 @@
-"""Signs of people: night lights on the Earth and on the planet's night side,
-and a rocket climbing from the Earth.
+"""Signs of people: the night lights of the Americas on the Earth in the sky,
+settlements on the Moon the man stands on, and a rocket climbing from it.
 
 Writes, as MVG for ImageMagick:
   lights.mvg       night lights (eraser marks, white on black)
@@ -11,6 +11,7 @@ Writes, as MVG for ImageMagick:
 import math, random, sys
 from erase import RING, LIMB
 from strokes import W, H, Noise
+import america
 
 FIGURE = (1640, 380)  # the man and his rock lie right of and below this
 # Where the planet's light comes from: the right, and from behind it, so it
@@ -24,60 +25,48 @@ def limb_y(x):
 
 
 # --- Night lights -------------------------------------------------------------
-# As in photos of the Earth at night: continents traced by lit coastlines, the
-# land covered in a web of faint lights along roads, bright cities at its nodes.
-# Generated on a flat map, then projected onto the Earth or the planet.
+# As in photos of the Earth at night: a web of faint lights along roads, with
+# brighter cities at its nodes. The planet in the sky is the Earth, showing
+# North America; the ground the man stands on is the Moon, settled too.
 
-def lights_map(rnd, w, h, seed, cities, specks):
-    """Returns lights as (u, v, brightness, core) on a w by h map."""
-    octaves = [(Noise(seed + k, 300 / 2 ** k), .5 ** k) for k in range(4)]
+def moon_lights(rnd, w, h, seed, cities):
+    """Settlements on the Moon as (u, v, brightness, core) on a w by h map:
+    towns clustered in settled regions, mostly small, a few big, joined by roads.
+    No seas, so no lit coasts."""
+    octaves = [(Noise(seed + k, 300 / 2 ** k), .5 ** k) for k in range(3)]
 
-    def height(u, v):
-        return sum(n(u, v) * a for n, a in octaves)
+    def settled(u, v):
+        return max(0, min(1, sum(n(u, v) * a for n, a in octaves) * 1.4 + .35))
 
-    def land(u, v):
-        return height(u, v) > -.05
-
-    def coastal(u, v):
-        return math.exp(-((height(u, v) + .05) / .07) ** 2)
-
-    out = []
-    # Cities, more of them along the coasts, mostly small, a few big
     towns = []
     while len(towns) < cities:
         u, v = rnd.uniform(0, w), rnd.uniform(0, h)
-        if land(u, v) and rnd.random() < .2 + .8 * coastal(u, v):
-            towns.append((u, v, 1.5 + 14 * rnd.random() ** 5))
+        if rnd.random() < settled(u, v) ** 2:
+            towns.append((u, v, 1.5 + 12 * rnd.random() ** 5))
+    out = []
     for u, v, size in towns:
-        for k in range(int(2 + size * size * .3)):
+        for k in range(int(3 + size * size * .3)):
             d = abs(rnd.gauss(0, size * .45))
             a = rnd.uniform(0, 2 * math.pi)
-            pu, pv = u + math.cos(a) * d, v + math.sin(a) * d
-            if land(pu, pv):
-                out.append((pu, pv, min(1, .3 + size / 18) * math.exp(-d / size), size > 7 and d < size * .25))
-    # Roads to the nearest towns, lit by the villages along them
-    for i, (u, v, size) in enumerate(towns):
-        near = sorted(towns, key=lambda t: (t[0] - u) ** 2 + (t[1] - v) ** 2)[1:4]
+            out.append((u + math.cos(a) * d, v + math.sin(a) * d,
+                        min(1, .3 + size / 16) * math.exp(-d / size), size > 7 and d < size * .25))
+    for u, v, size in towns:
+        near = sorted(towns, key=lambda t: (t[0] - u) ** 2 + (t[1] - v) ** 2)[1:3]
         for tu, tv, _ in near:
             L = math.hypot(tu - u, tv - v)
-            if L > 95:
+            if L > 70:
                 continue
-            bend = rnd.uniform(-.2, .2)
+            bend = rnd.uniform(-.25, .25)
             for k in range(int(L / 4)):
                 t = k / max(1, L / 4)
-                pu = u + (tu - u) * t - (tv - v) * bend * math.sin(t * math.pi)
-                pv = v + (tv - v) * t + (tu - u) * bend * math.sin(t * math.pi)
-                pu += rnd.gauss(0, 1.5); pv += rnd.gauss(0, 1.5)
-                if land(pu, pv) and rnd.random() < .6:
-                    out.append((pu, pv, rnd.uniform(.18, .34), False))
-    # Coasts, lit almost everywhere
-    for _ in range(specks):
+                if rnd.random() < .5:
+                    w_ = bend * math.sin(t * math.pi)
+                    out.append((u + (tu - u) * t - (tv - v) * w_ + rnd.gauss(0, 1.5),
+                                v + (tv - v) * t + (tu - u) * w_ + rnd.gauss(0, 1.5), rnd.uniform(.14, .28), False))
+    for _ in range(9000):
         u, v = rnd.uniform(0, w), rnd.uniform(0, h)
-        if not land(u, v):
-            continue
-        c = coastal(u, v)
-        if rnd.random() < .12 + .88 * c:
-            out.append((u, v, rnd.uniform(.12, .26) + .4 * c, False))
+        if rnd.random() < settled(u, v) ** 3 * .6:
+            out.append((u, v, rnd.uniform(.1, .22), False))
     return out
 
 
@@ -96,17 +85,17 @@ def draw_lights(f, glow, rnd, lights, project):
             glow.write(f'fill-opacity {.03 + .05 * b:.2f}\ncircle {x:.1f},{y:.1f} {x + 6:.1f},{y:.1f}\n')
 
 
-EARTH_DEPTH = 700  # map units from the bottom of the picture to the horizon
+GROUND_DEPTH = 700  # map units from the bottom of the picture to the horizon
 
 
-def earth_project(u, v):
+def moon_project(u, v):
     """Map u runs along the picture, v from the bottom edge to the horizon,
     crowding together toward the horizon as the ground recedes."""
     x = u
     top = limb_y(x) + 6
     if top >= H:
         return None
-    t = v / EARTH_DEPTH
+    t = v / GROUND_DEPTH
     if not 0 <= t < 1:
         return None
     y = top + (H - top) * (1 - t) ** 1.7
@@ -115,24 +104,91 @@ def earth_project(u, v):
     return x, y, min(1, (y - top) / 25) * (1 - .4 * t)
 
 
-def planet_normal(lat, lon):
-    return math.cos(lat) * math.sin(lon), -math.sin(lat), math.cos(lat) * math.cos(lon)
+# The planet is the Earth, seen from the Moon, turned so that the Americas are
+# on its night side
+VIEW_LAT, VIEW_LON = math.radians(12), math.radians(-72)
 
 
-def planet_project(u, v):
-    """Map units are the planet's radius times longitude and latitude."""
+def inside(lat, lon, poly):
+    hit = False
+    for (a1, o1), (a2, o2) in zip(poly, poly[1:] + poly[:1]):
+        if (a1 > lat) != (a2 > lat) and lon < o1 + (lat - a1) * (o2 - o1) / (a2 - a1):
+            hit = not hit
+    return hit
+
+
+def on_land(lat, lon):
+    return any(inside(lat, lon, p) for p in america.LAND) and not any(inside(lat, lon, p) for p in america.GREAT_LAKES)
+
+
+def america_lights(rnd):
+    """Night lights of the Americas as (lat, lon, brightness, core): cities by
+    population, the roads between them, towns and coasts lit most where people
+    are most."""
+    cities = america.CITIES
+
+    def crowding(lat, lon):
+        return sum(pop / (1 + ((lat - a) ** 2 + ((lon - o) * math.cos(math.radians(lat))) ** 2) / 9)
+                   for a, o, pop in cities) / 12
+
+    out = []
+    for lat, lon, pop in cities:
+        size = .12 * math.sqrt(pop) + .05
+        for k in range(int(5 + 8 * pop ** .8)):
+            d = abs(rnd.gauss(0, size))
+            a = rnd.uniform(0, 2 * math.pi)
+            pa, po = lat + math.sin(a) * d, lon + math.cos(a) * d / math.cos(math.radians(lat))
+            if on_land(pa, po):
+                out.append((pa, po, min(1, .45 + pop / 12) * math.exp(-d / (size * 1.5)), d < size * .5))
+    # Highways to the nearest cities
+    for lat, lon, pop in cities:
+        near = sorted(cities, key=lambda c: (c[0] - lat) ** 2 + (c[1] - lon) ** 2)[1:4]
+        for a, o, _ in near:
+            L = math.hypot(a - lat, o - lon)
+            if L > 9:
+                continue
+            for k in range(int(L / .25)):
+                t = k / (L / .25)
+                pa = lat + (a - lat) * t + rnd.gauss(0, .05)
+                po = lon + (o - lon) * t + rnd.gauss(0, .05)
+                if on_land(pa, po) and rnd.random() < .3:
+                    out.append((pa, po, rnd.uniform(.1, .22), False))
+    # Towns everywhere, densest near the cities; lit coasts where people live
+    for _ in range(30000):
+        lat, lon = rnd.uniform(-56, 60), rnd.uniform(-130, -34)
+        if not on_land(lat, lon):
+            continue
+        c = crowding(lat, lon)
+        if rnd.random() < .015 + .35 * min(1, c):
+            out.append((lat, lon, rnd.uniform(.12, .26) + min(.25, c * .3), False))
+    for poly in america.LAND + america.GREAT_LAKES:
+        for (a1, o1), (a2, o2) in zip(poly, poly[1:] + poly[:1]):
+            n = int(math.hypot(a2 - a1, o2 - o1) / .2)
+            for k in range(n):
+                t = k / max(1, n)
+                lat, lon = a1 + (a2 - a1) * t + rnd.gauss(0, .06), o1 + (o2 - o1) * t + rnd.gauss(0, .06)
+                c = crowding(lat, lon)
+                if lat < 58 and on_land(lat, lon) and rnd.random() < .05 + min(.6, c):
+                    out.append((lat, lon, rnd.uniform(.18, .3) + min(.3, c * .4), False))
+    return out
+
+
+def earth_project(lat, lon):
+    """Puts a place on the Earth (in degrees) onto the planet in the picture,
+    keeping to its visible night side."""
     cx, cy, r = RING
-    lat, lon = v / r - 1.5, u / r - 1.6
-    n = planet_normal(lat, lon)
-    if n[2] <= .05:
+    la, lo = math.radians(lat), math.radians(lon) - VIEW_LON
+    x = math.cos(la) * math.sin(lo)
+    y = -(math.cos(VIEW_LAT) * math.sin(la) - math.sin(VIEW_LAT) * math.cos(la) * math.cos(lo))
+    z = math.sin(VIEW_LAT) * math.sin(la) + math.cos(VIEW_LAT) * math.cos(la) * math.cos(lo)
+    if z <= .05:
         return None
-    d = sum(a * b for a, b in zip(n, LIGHT))
-    if d > -.02:
+    if x * LIGHT[0] + y * LIGHT[1] + z * LIGHT[2] > -.02:
         return None  # daylight
-    x, y = cx + r * n[0], cy + r * n[1]
-    if math.hypot(x - cx, y - cy) > r - 5 or y > limb_y(x) - 4:
+    px, py = cx + r * x, cy + r * y
+    if math.hypot(px - cx, py - cy) > r - 5 or py > limb_y(px) - 4:
         return None
-    return x, y, min(1, n[2] * 2.5)  # dimmer toward the rim, through more air
+    return px, py, min(1, z * 2.5)  # dimmer toward the rim, through more air
 
 
 # --- Rocket -------------------------------------------------------------------
@@ -219,8 +275,8 @@ def main(out):
     with open(f'{out}/lights.mvg', 'w') as f, open(f'{out}/lights-glow.mvg', 'w') as glow:
         for g in (f, glow):
             g.write(f'viewbox 0 0 {W} {H}\nstroke none\nfill white\n')
-        draw_lights(f, glow, rnd, lights_map(rnd, 1650, EARTH_DEPTH, 300, 650, 40000), earth_project)
-        draw_lights(f, glow, rnd, lights_map(rnd, 1090, 1020, 400, 420, 26000), planet_project)
+        draw_lights(f, glow, rnd, moon_lights(rnd, 1650, GROUND_DEPTH, 300, 420), moon_project)
+        draw_lights(f, glow, rnd, america_lights(rnd), earth_project)
     rocket(out, rnd)
 
 
