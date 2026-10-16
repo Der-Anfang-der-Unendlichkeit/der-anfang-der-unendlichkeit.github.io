@@ -14,6 +14,6 @@ planet=rg+0.07+0.12*pow(pr,6)+0.62*pow(day,0.7)+0.06*(u[2]-0.5);
 pin=max(0,min(1,(1-pr)*85+0.5));
 skyv=pin*planet+(1-pin)*skyv;
 cld=max(0,min(1,(u[2]-0.45)*3.2));
-erth=rg+0.22+0.48*cld+0.45*exp(dd/40)+0.18*exp(dd/260)+0.45*glw-0.12*pow(j/1080,3);
+erth=0.22+0.48*cld+0.45*exp(dd/40)+0.18*exp(dd/260)+0.45*glw-0.12*pow(j/1080,3);
 mix=max(0,min(1,dd/3+0.5));
 max(0,min(1,mix*skyv+(1-mix)*erth))
