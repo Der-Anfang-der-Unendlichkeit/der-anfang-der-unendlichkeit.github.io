@@ -70,7 +70,8 @@ def moon_lights(rnd, w, h, seed, cities):
     return out
 
 
-def draw_lights(f, glow, rnd, lights, project):
+def draw_lights(f, glow, rnd, lights, project, size=1, halo=0):
+    """`size` scales the lights; `halo` adds glow around the brighter ones too."""
     for u, v, b, core in lights:
         p = project(u, v)
         if p is None:
@@ -79,10 +80,10 @@ def draw_lights(f, glow, rnd, lights, project):
         b *= fade
         if b < .06:
             continue
-        r = (1.1 + .5 * b) if core else (.9 + .5 * b)
+        r = ((1.1 + .5 * b) if core else (.9 + .5 * b)) * size
         f.write(f'fill-opacity {min(1, .5 + .8 * b):.2f}\ncircle {x:.1f},{y:.1f} {x + r:.1f},{y:.1f}\n')
-        if core:
-            glow.write(f'fill-opacity {.03 + .05 * b:.2f}\ncircle {x:.1f},{y:.1f} {x + 6:.1f},{y:.1f}\n')
+        if core or b > 1 - halo:
+            glow.write(f'fill-opacity {(.03 + .05 * b) * (1 + 2 * halo):.2f}\ncircle {x:.1f},{y:.1f} {x + 6 * size:.1f},{y:.1f}\n')
 
 
 GROUND_DEPTH = 700  # map units from the bottom of the picture to the horizon
@@ -275,7 +276,8 @@ def main(out):
     with open(f'{out}/lights.mvg', 'w') as f, open(f'{out}/lights-glow.mvg', 'w') as glow:
         for g in (f, glow):
             g.write(f'viewbox 0 0 {W} {H}\nstroke none\nfill white\n')
-        draw_lights(f, glow, rnd, moon_lights(rnd, 1650, GROUND_DEPTH, 300, 420), moon_project)
+        draw_lights(f, glow, rnd, moon_lights(rnd, 1650, GROUND_DEPTH, 300, 420), moon_project,
+                    size=1.5, halo=.75)  # brighter than the Earth's: much closer, on paler ground
         draw_lights(f, glow, rnd, america_lights(rnd), earth_project)
     rocket(out, rnd)
 
