@@ -5,7 +5,7 @@ Writes stars.mvg (dots), glints.mvg (rays of the brighter stars) and ring.mvg.
 import math, random, sys
 from strokes import W, H, Noise
 
-RING = (680, 540, 340)
+RING = (680, 585, 340)
 LIMB = (1150, 3680, 2850)
 
 
@@ -51,7 +51,7 @@ def main(out):
                 f.write(f'stroke-width {w:.2f}\nstroke-opacity .8\nline {x - math.cos(a) * L:.1f},{y - math.sin(a) * L:.1f} '
                         f'{x + math.cos(a) * L:.1f},{y + math.sin(a) * L:.1f}\n')
         # The bright star on the ring's upper left, as on the cover, is not drawn
-        # here: the footer's SVG draws it at 427,312.5 so it can twinkle.
+        # here: the footer's SVG draws it at 427,357.5 so it can twinkle.
     # the ring: a firm pass and a fainter one beside it, both wobbling a little
     wob = Noise(5, 160)
     cx, cy, r = RING
