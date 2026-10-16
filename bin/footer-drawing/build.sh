@@ -3,8 +3,7 @@
 #
 #   sky-1200.webp, sky-1600.webp  the drawing, without his pointing arm
 #   sky-phone.webp                its right part (x 850-2400), which is all phones show
-#   arm-1.webp … arm-4.webp       his arm pointing at each of the four links, cut out so the
-#                                 footer can swing it between them about his shoulder
+#   arm.webp                      the arm, cut out so the footer can swing it about his shoulder
 #   sky-tile.webp                 seamless sky that fills the sides on wide screens
 #
 # Everything is drawn in a 2400x1080 space. The man and his rock come from the
@@ -29,12 +28,7 @@ cd "$tmp"
 cp "$here"/*.fx .
 BANNER="$root/images/banner-lg-min.webp"
 CROP=420x460+1080+1040
-ARM_LIFT=0.15
-# The arm's angle for each footer link, in degrees clockwise from where the
-# banner has it. application.css turns the arm by these, so keep them in step.
-ARM_POSES=(-10.7 -27.0 -41.9 -57.5)
-# Where the arm images go in the drawing; every pose fits inside
-ARM_BOX=260x250+1730+390
+ARM_LIFT=0.2
 
 # --- The man and his rock -----------------------------------------------------
 magick "$BANNER" -crop $CROP +repage -resize 200% -channel B -separate -blur 0x2 -threshold 65% -negate -compress none pgm:blue.pgm
@@ -50,9 +44,8 @@ magick figmask.png -fx '(-27*(j-132) - 58*(i-292) > 0 && i < 320 && j < 215) ? u
 magick -size 630x690 xc:black -fill white -draw "circle 277,166 277,187" -blur 0x0.8 pivot.png
 magick armside.png pivot.png -compose lighten -composite armmask.png
 # His shading, from the banner's brightness. The sleeve is darker there than
-# his torso, which stands out once the arm moves, so lighten the arm a little,
-# easing in from the shoulder joint so there's no seam. Lightening it more
-# thins out its cross-hatching, which looks just as wrong.
+# his torso, which stands out once the arm moves, so lighten the arm to match,
+# easing in from the shoulder joint so there's no seam
 magick "$BANNER" -crop $CROP +repage -resize 630x690! -colorspace gray -fx '0.05 + 0.78*pow(u, 2.3)' figtone.png
 magick figtone.png \( armside.png -blur 0x2 \) -fx "u + $ARM_LIFT*v*min(1, max(0, (hypot(i-277, j-166) - 21)/35))" figtone.png
 magick figmask.png armside.png -compose minus_src -composite pivot.png -compose lighten -composite fadeL.png -compose multiply -composite bodymask.png
@@ -89,10 +82,10 @@ magick -size 2400x1080 xc:black -draw @rocket.mvg -blur 0x0.6 \
   \( -size 2400x1080 xc:black -draw @rocket-glow.mvg -blur 0x9 \) -compose lighten -composite rocket.png
 magick -size 2400x1080 xc:black -draw @rocket-ink.mvg -blur 0x0.5 rocket-ink.png
 
-# --- The drawing without his arm, and the arm in each pose -------------------
+# --- The drawing, once without his arm and once with it -----------------------
 render() {
-  local m=$1 tone=$2
-  magick $tone ${m}mask.png -alpha off -compose copy_opacity -composite figtone_$m.png
+  local m=$1
+  magick figtone.png ${m}mask.png -alpha off -compose copy_opacity -composite figtone_$m.png
   magick -size 2400x1080 xc:black ${m}mask.png -geometry +1650+390 -compose over -composite -colorspace gray figA_$m.png
   magick figA_$m.png -morphology Edge Disk:1.2 -level 10%,70% figEdge_$m.png
   magick tone_bg.png figtone_$m.png -geometry +1650+390 -compose over -composite tone_$m.png
@@ -101,24 +94,11 @@ render() {
   magick pencil0_$m.png stars.png glints.png ring.png figA_$m.png tooth.png iso.png lights.png rocket.png rocket-ink.png \
     -fx @post.fx -colorspace gray pencil_$m.png
 }
-render body figtone.png
-# Each pose is drawn in place rather than turned from one image: turning an
-# image resamples it, which smears the hatching into flat grey
-for i in 1 2 3 4; do
-  a=${ARM_POSES[$((i-1))]}
-  magick armmask.png -virtual-pixel black -distort SRT "277,166 1 $a" armmask_$i.png
-  magick figtone.png -virtual-pixel edge -distort SRT "277,166 1 $a" armtone_$i.png
-  magick figtone.png armtone_$i.png armmask_$i.png -composite figtone_$i.png
-  magick bodymask.png armmask_$i.png -compose lighten -composite pose${i}mask.png
-  render pose$i figtone_$i.png
-  magick -size 2400x1080 xc:black armmask_$i.png -geometry +1650+390 -compose over -composite -colorspace gray \
-    -morphology Dilate Disk:1.5 armA_$i.png
-  # the box must hold the whole arm
-  all=$(magick armA_$i.png -format '%[fx:mean*w*h]' info:)
-  boxed=$(magick armA_$i.png -crop $ARM_BOX +repage -format '%[fx:mean*w*h]' info:)
-  awk -v a="$all" -v b="$boxed" 'BEGIN { exit (a - b > 1) }' || { echo "Arm pose $i sticks out of ARM_BOX" >&2; exit 1; }
-  magick pencil_pose$i.png armA_$i.png -alpha off -compose copy_opacity -composite -crop $ARM_BOX +repage arm-$i.png
-done
+render body
+render full
+magick -size 2400x1080 xc:black armmask.png -geometry +1650+390 -compose over -composite -colorspace gray \
+  -morphology Dilate Disk:1.5 -crop 200x190+1778+408 +repage armA.png
+magick pencil_full.png -crop 200x190+1778+408 +repage armA.png -alpha off -compose copy_opacity -composite arm.png
 
 # --- Seamless sky for the sides -----------------------------------------------
 python3 "$here/tile.py" .
@@ -154,12 +134,13 @@ magick body.png -crop 1550x1080+850+0 +repage -resize 800x "${WEBP[@]}" "$OUT/sk
 magick body.png -resize 1200x "${WEBP[@]}" "$OUT/sky-1200.webp"
 magick body.png -resize 1600x "${WEBP[@]}" "$OUT/sky-1600.webp"
 magick tile.png -resize 800x "${WEBP[@]}" "$OUT/sky-tile.webp"
-# The arm at the same scale as sky-1600, resized the same way, so its hatching
-# stays as crisp as the rest of him instead of the browser blurring it to grey
-for i in 1 2 3 4; do
-  magick arm-$i.png \( +clone -alpha off -fill '#fffaf0' -draw 'color 0,0 reset' \) -compose multiply -composite \
-    arm-$i.png -compose copy_opacity -composite -resize 66.667% -quality 80 -define webp:alpha-quality=80 "$OUT/arm-$i.webp"
-done
+# The browser turns the arm to point at each link, which softens it, so it's
+# exported a little sharper than sky-1600 (75% rather than 67%, quality 60
+# rather than 30). Measured in the browser at 1440 px wide on a retina screen,
+# that gives its hatching the same brightness and texture as his torso in
+# every pose; full size it looks finer and darker, at sky-1600's settings blurry.
+magick arm.png \( +clone -alpha off -fill '#fffaf0' -draw 'color 0,0 reset' \) -compose multiply -composite \
+  arm.png -compose copy_opacity -composite -resize 75% -quality 60 -define webp:method=6 -define webp:alpha-quality=80 "$OUT/arm.webp"
 echo "Wrote $OUT"
 # Point the pages at the new images, so browsers don't show cached old ones
 if [ "$OUT" = "$root/images/footer" ]; then
