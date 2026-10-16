@@ -65,7 +65,7 @@ magick -size 2400x1080 xc:gray50 -seed 77 +noise Gaussian -colorspace gray -blur
   \( +clone -shade 120x45 -auto-level \) -compose overlay -composite -level 15%,85% tooth.png
 magick -size 2400x1080 xc:black iso.png cloud.png -fx @tone.fx -colorspace gray tone_bg.png
 
-# --- Strokes, stars and the ring ----------------------------------------------
+# --- Strokes, stars, the ring, city lights and the rocket ---------------------
 python3 "$here/strokes.py" .
 python3 "$here/erase.py" .
 for n in sky1 sky2 sky3 sky4 earth1 earth2 earth3 fig1 fig2 fig3 fig4; do
@@ -75,6 +75,12 @@ wait
 magick -size 2400x1080 xc:black -draw @stars.mvg -blur 0x0.5 stars.png
 magick -size 2400x1080 xc:black -draw @glints.mvg -blur 0x0.6 glints.png
 magick -size 2400x1080 xc:black -draw @ring.mvg -blur 0x0.6 ring.png
+python3 "$here/extras.py" .
+magick -size 2400x1080 xc:black -draw @lights.mvg -blur 0x0.5 \
+  \( -size 2400x1080 xc:black -draw @lights-glow.mvg -blur 0x6 \) -compose plus -composite lights.png
+magick -size 2400x1080 xc:black -draw @rocket.mvg -blur 0x0.6 \
+  \( -size 2400x1080 xc:black -draw @rocket-glow.mvg -blur 0x9 \) -compose lighten -composite rocket.png
+magick -size 2400x1080 xc:black -draw @rocket-ink.mvg -blur 0x0.5 rocket-ink.png
 
 # --- The drawing, once without his arm and once with it -----------------------
 render() {
@@ -85,7 +91,8 @@ render() {
   magick tone_bg.png figtone_$m.png -geometry +1650+390 -compose over -composite tone_$m.png
   magick tone_$m.png figA_$m.png sky1.png sky2.png sky3.png sky4.png earth1.png earth2.png earth3.png \
     fig1.png fig2.png fig3.png fig4.png tooth.png figEdge_$m.png -fx @pencil.fx -colorspace gray pencil0_$m.png
-  magick pencil0_$m.png stars.png glints.png ring.png figA_$m.png tooth.png iso.png -fx @post.fx -colorspace gray pencil_$m.png
+  magick pencil0_$m.png stars.png glints.png ring.png figA_$m.png tooth.png iso.png lights.png rocket.png rocket-ink.png \
+    -fx @post.fx -colorspace gray pencil_$m.png
 }
 render body
 render full
