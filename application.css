@@ -341,8 +341,8 @@ del {
 /*
  * Footer: a pencil drawing (images/footer/, rendered by bin/footer-drawing/build.sh)
  * with the links as a constellation the man points at. Hovering or focusing a link
- * swings his arm (a separate cutout) toward its star. Coordinates are in the
- * drawing's 2400x1080 space; the arm turns about his shoulder at 1927,556.
+ * swings his arm toward its star. Coordinates are in the drawing's 2400x1080
+ * space; the arm turns about his shoulder at 1927,556.
  */
 .site-footer {
   margin-top: 4rem;
@@ -427,12 +427,26 @@ del {
   transform: none;
 }
 
-/* At rest he points at Buch kaufen */
+/*
+ * His arm comes as one image per pose (a1-a4, drawn pointing at l1-l4, at
+ * -10.7, -27, -41.9 and -57.5 degrees), since turning one image would blur its
+ * hatching. Only the selected pose shows. All four turn together, each by the
+ * selected angle minus its own, so the one that appears picks up where the
+ * last one was and swings into place. At rest he points at Buch kaufen.
+ */
 .site-footer .arm {
   transform-box: view-box;
   transform-origin: 1927px 556px;
-  transform: rotate(-27.0deg);
   transition: transform .7s cubic-bezier(.3, .8, .3, 1);
+  opacity: 0;
+}
+
+.site-footer .arm.a2 {
+  opacity: 1;
+}
+
+.site-footer a:is(:hover, :focus-visible) ~ .arm {
+  opacity: 0;
 }
 
 .site-footer .sight {
@@ -453,14 +467,34 @@ del {
   opacity: 0;
 }
 
-.site-footer a.l1:is(:hover, :focus-visible) ~ .arm { transform: rotate(-10.7deg); }
+.site-footer .arm.a1 { transform: rotate(-16.3deg); }
+.site-footer .arm.a2 { transform: rotate(0.0deg); }
+.site-footer .arm.a3 { transform: rotate(14.9deg); }
+.site-footer .arm.a4 { transform: rotate(30.5deg); }
 .site-footer a.l1:is(:hover, :focus-visible) ~ .s1 { opacity: .85; }
-.site-footer a.l2:is(:hover, :focus-visible) ~ .arm { transform: rotate(-27.0deg); }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm.a1 { opacity: 1; }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm.a1 { transform: rotate(0.0deg); }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm.a2 { transform: rotate(16.3deg); }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm.a3 { transform: rotate(31.2deg); }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm.a4 { transform: rotate(46.8deg); }
 .site-footer a.l2:is(:hover, :focus-visible) ~ .s2 { opacity: .85; }
-.site-footer a.l3:is(:hover, :focus-visible) ~ .arm { transform: rotate(-41.9deg); }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm.a2 { opacity: 1; }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm.a1 { transform: rotate(-16.3deg); }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm.a2 { transform: rotate(0.0deg); }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm.a3 { transform: rotate(14.9deg); }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm.a4 { transform: rotate(30.5deg); }
 .site-footer a.l3:is(:hover, :focus-visible) ~ .s3 { opacity: .85; }
-.site-footer a.l4:is(:hover, :focus-visible) ~ .arm { transform: rotate(-57.5deg); }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm.a3 { opacity: 1; }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm.a1 { transform: rotate(-31.2deg); }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm.a2 { transform: rotate(-14.9deg); }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm.a3 { transform: rotate(0.0deg); }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm.a4 { transform: rotate(15.6deg); }
 .site-footer a.l4:is(:hover, :focus-visible) ~ .s4 { opacity: .85; }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm.a4 { opacity: 1; }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm.a1 { transform: rotate(-46.8deg); }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm.a2 { transform: rotate(-30.5deg); }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm.a3 { transform: rotate(-15.6deg); }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm.a4 { transform: rotate(0.0deg); }
 
 /*
  * The bright star on the ring flares now and then. Three nested groups flare on
