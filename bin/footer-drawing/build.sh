@@ -28,13 +28,13 @@ cd "$tmp"
 cp "$here"/*.fx .
 BANNER="$root/images/banner-lg-min.webp"
 CROP=420x460+1080+1040
+ARM_LIFT=0.3
 
 # --- The man and his rock -----------------------------------------------------
 magick "$BANNER" -crop $CROP +repage -resize 200% -channel B -separate -blur 0x2 -threshold 65% -negate -compress none pgm:blue.pgm
 magick "$BANNER" -crop $CROP +repage -resize 200% -colorspace gray -blur 0x1.5 -threshold 60% -negate -compress none pgm:gray.pgm
 python3 "$here/figure.py" blue.pgm gray.pgm fig.pbm
 magick fig.pbm -resize 630x690! -blur 0x0.8 -negate figmask.png
-magick "$BANNER" -crop $CROP +repage -resize 630x690! -colorspace gray -fx '0.05 + 0.78*pow(u, 2.3)' figtone.png
 # The rock melts into the Earth on its left
 magick -size 690x630 gradient:black-white -rotate -90 -level 0,22% fadeL.png
 magick figmask.png fadeL.png -compose multiply -composite fullmask.png
@@ -43,6 +43,11 @@ magick figmask.png fadeL.png -compose multiply -composite fullmask.png
 magick figmask.png -fx '(-27*(j-132) - 58*(i-292) > 0 && i < 320 && j < 215) ? u : 0' armside.png
 magick -size 630x690 xc:black -fill white -draw "circle 277,166 277,187" -blur 0x0.8 pivot.png
 magick armside.png pivot.png -compose lighten -composite armmask.png
+# His shading, from the banner's brightness. The sleeve is darker there than
+# his torso, which stands out once the arm moves, so lighten the arm, easing in
+# from the shoulder joint so there's no seam
+magick "$BANNER" -crop $CROP +repage -resize 630x690! -colorspace gray -fx '0.05 + 0.78*pow(u, 2.3)' figtone.png
+magick figtone.png \( armside.png -blur 0x2 \) -fx "u + $ARM_LIFT*v*min(1, max(0, (hypot(i-277, j-166) - 21)/35))" figtone.png
 magick figmask.png armside.png -compose minus_src -composite pivot.png -compose lighten -composite fadeL.png -compose multiply -composite bodymask.png
 
 # --- Tone ---------------------------------------------------------------------
