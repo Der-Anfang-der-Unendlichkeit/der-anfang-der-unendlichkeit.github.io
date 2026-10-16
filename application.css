@@ -337,3 +337,150 @@ del {
   border-radius: 5px;
   padding: 0 2px;
 }
+
+/*
+ * Footer: a pencil drawing (images/footer/, rendered by bin/footer-drawing/build.sh)
+ * with the links as a constellation the man points at. Hovering or focusing a link
+ * swings his arm (a separate cutout) toward its star. Coordinates are in the
+ * drawing's 2400x1080 space; the arm turns about his shoulder at 1927,556.
+ */
+.site-footer {
+  margin-top: 4rem;
+  overflow: hidden;
+}
+
+/* The drawing stops growing at 640px tall; wider screens get seamless sky on both sides */
+.site-footer .frame {
+  max-width: 1422px;
+  margin: 0 auto;
+}
+
+.site-footer .canvas {
+  position: relative;
+  aspect-ratio: 2400 / 1080;
+}
+
+.site-footer .canvas img, .site-footer svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.site-footer .lines {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: .6;
+}
+
+.site-footer .star {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform .3s;
+}
+
+.site-footer .hit {
+  fill: transparent;
+}
+
+.site-footer text {
+  font-size: 54px;
+  fill: floralwhite;
+  paint-order: stroke;
+  stroke: rgba(20, 20, 20, .55);
+  stroke-width: 7px;
+  stroke-linejoin: round;
+  letter-spacing: .5px;
+}
+
+.site-footer text.buy {
+  font-weight: bold;
+}
+
+.site-footer a:focus {
+  outline: none;
+}
+
+.site-footer a:is(:hover, :focus-visible) text {
+  fill: #fff;
+  text-decoration: underline;
+}
+
+.site-footer a:is(:hover, :focus-visible) .star {
+  transform: scale(1.35);
+}
+
+/* At rest he points at the first star */
+.site-footer .arm {
+  transform-box: view-box;
+  transform-origin: 1927px 556px;
+  transform: rotate(-10.7deg);
+  transition: transform .7s cubic-bezier(.3, .8, .3, 1);
+}
+
+.site-footer .sight {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: .1 16;
+  opacity: 0;
+  transition: opacity .35s;
+}
+
+.site-footer .sight.s1 {
+  opacity: .8;
+}
+
+.site-footer a:is(:hover, :focus-visible) ~ .sight.s1 {
+  opacity: 0;
+}
+
+.site-footer a.l1:is(:hover, :focus-visible) ~ .arm { transform: rotate(-10.7deg); }
+.site-footer a.l1:is(:hover, :focus-visible) ~ .s1 { opacity: .85; }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .arm { transform: rotate(-27.0deg); }
+.site-footer a.l2:is(:hover, :focus-visible) ~ .s2 { opacity: .85; }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .arm { transform: rotate(-41.9deg); }
+.site-footer a.l3:is(:hover, :focus-visible) ~ .s3 { opacity: .85; }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .arm { transform: rotate(-57.5deg); }
+.site-footer a.l4:is(:hover, :focus-visible) ~ .s4 { opacity: .85; }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer .arm, .site-footer .sight, .site-footer .star {
+    transition: none;
+  }
+}
+
+/* Phones show only the right part of the drawing (x 850-2400), from an image cropped to it */
+@media (max-width: 767.98px) {
+  .site-footer .canvas {
+    width: 155%;
+    margin-left: -54.9%;
+  }
+
+  .site-footer .canvas img {
+    left: 35.42%;
+    width: 64.58%;
+  }
+
+  .site-footer text {
+    font-size: 74px;
+    stroke-width: 9px;
+  }
+}
+
+@media (min-width: 1423px) {
+  .site-footer {
+    background: url('/images/footer/sky-tile.webp') repeat-x center top / auto 100%;
+  }
+
+  .site-footer .canvas img {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 7%, #000 95%, transparent);
+  }
+}

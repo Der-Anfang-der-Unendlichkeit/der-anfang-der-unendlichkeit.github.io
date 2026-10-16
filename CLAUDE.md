@@ -55,6 +55,18 @@ enough that its image or subtitle no longer fits, update the list and rerun
 the script. New pages need an entry there, too. Images keep the bottom-left
 corner free, where X overlays the domain.
 
+## Footer
+
+The footer is a pencil drawing of the cover's scene with the footer links as a
+constellation the man points at; hovering or focusing a link swings his arm
+toward its star (CSS only, in `application.css` under `.site-footer`). The
+drawing, his arm and the sky that tiles the sides on wide screens are in
+`images/footer/`, rendered from the banner by `bin/footer-drawing/build.sh`.
+The markup and CSS use the drawing's 2400×1080 coordinates (star positions,
+the shoulder the arm turns about, the hover rotations), so if the drawing's
+geometry changes, update them together. Phones get an image cropped to the
+part they show; keep the images small, since they load on every page.
+
 ## Assets
 
 - Bootstrap 4.6 CSS is vendored; no JavaScript library is loaded.
