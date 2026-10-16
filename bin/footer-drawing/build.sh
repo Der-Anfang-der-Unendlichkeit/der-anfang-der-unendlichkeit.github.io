@@ -137,3 +137,7 @@ magick tile.png -resize 800x "${WEBP[@]}" "$OUT/sky-tile.webp"
 magick arm.png \( +clone -alpha off -fill '#fffaf0' -draw 'color 0,0 reset' \) -compose multiply -composite \
   arm.png -compose copy_opacity -composite -quality 80 -define webp:alpha-quality=80 "$OUT/arm.webp"
 echo "Wrote $OUT"
+# Point the pages at the new images, so browsers don't show cached old ones
+if [ "$OUT" = "$root/images/footer" ]; then
+  "$root/bin/version-assets.sh"
+fi

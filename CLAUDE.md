@@ -73,11 +73,11 @@ at the top.
 ## Assets
 
 - Bootstrap 4.6 CSS is vendored; no JavaScript library is loaded.
-- Pages link `application.css?v=…` with the first 8 characters of the file's
-  MD5. GitHub Pages lets browsers cache it for 10 minutes, so without a new
-  URL fresh markup meets a stale stylesheet after a deploy. After changing the
-  stylesheet, update every page:
-  `h=$(md5 -q application.css | cut -c1-8); sed -i '' -E "s|application\.css(\?v=[0-9a-f]+)?\"|application.css?v=$h\"|" *.html`
+- Pages load `application.css` and the footer images with `?v=` and the first
+  8 characters of the file's MD5. GitHub Pages lets browsers cache files for 10
+  minutes, so without a new URL a deploy can pair fresh markup with a stale
+  stylesheet or image. After changing either, run `bin/version-assets.sh`
+  (`bin/footer-drawing/build.sh` runs it itself).
 - Fonts (EB Garamond, Pathway Gothic One) are self-hosted in `fonts/` under the
   SIL Open Font License, so the site loads nothing from font services. Keep it
   that way: any new third-party request needs a section in the privacy policy

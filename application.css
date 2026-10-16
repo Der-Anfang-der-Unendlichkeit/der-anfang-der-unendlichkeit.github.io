@@ -525,7 +525,7 @@ del {
 
 @media (min-width: 1423px) {
   .site-footer {
-    background: url('/images/footer/sky-tile.webp') repeat-x center top / auto 100%;
+    background: url('/images/footer/sky-tile.webp?v=398baf4a') repeat-x center top / auto 100%;
   }
 
   .site-footer .canvas img {
