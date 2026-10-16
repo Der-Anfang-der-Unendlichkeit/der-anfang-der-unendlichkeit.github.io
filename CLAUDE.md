@@ -90,9 +90,10 @@ at the top.
   those ranges.
 - The homepage banner comes in two sizes: `banner-600.webp` for phones and
   `banner-lg-min.webp` above 576px. The homepage preloads both by media query.
-- Files must stay under GitHub's 100 MB limit. Unused originals (such as the
-  full-quality Socrates audio) live outside the repo in
-  `../assets/`.
+- Files must stay under GitHub's 100 MB limit. Unused originals live outside
+  the repo. `socrates.mp3` is made from the full-quality
+  `../socrates-original.mp3` as 40 kbps mono (lower sounds muffled):
+  `lame -m m -b 40 --resample 24 ../socrates-original.mp3 socrates.mp3`
 
 ## Deploys
 
